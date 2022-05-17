@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AMApplicationBuild</key>
+	<string>512</string>
+	<key>AMApplicationVersion</key>
+	<string>2.10</string>
+	<key>AMDocumentVersion</key>
+	<string>2</string>
+	<key>actions</key>
+	<array>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array>
+						<string>com.apple.applescript.object</string>
+					</array>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>1.0.2</string>
+				<key>AMApplication</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>source</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.applescript.object</string>
+					</array>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Run AppleScript.action</string>
+				<key>ActionName</key>
+				<string>Run AppleScript</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>source</key>
+					<string>property currentUrl : nullproperty originalBounds : {}property originalRecordCount : 0on run	tell application "Safari" to activate		setUrl()	setOriginalBounds()	changeWidth()	setOriginalRecordCount()	exportAsPdf()	restoreWidth()	updateUrl()end runon waitFor(element)	set i to 10		repeat until exists element		set i to i - 1		if i = 0 then exit repeat		delay 0.3	end repeatend waitForon setUrl()	tell application "Safari"		set currentUrl to URL of current tab of window 1				return currentUrl	end tellend setUrlon setOriginalBounds()	try		tell application "Safari"			set originalBounds to bounds of the first window						return originalBounds		end tell	on error number -1719		display notification "Clip to DEVONthink: No open Safari windows!"	end tryend setOriginalBoundson changeWidth()	tell application "Safari"		copy originalBounds to newBounds		set item 3 of newBounds to the (first item of originalBounds) + 1024		set bounds of the first window to newBounds	end tellend changeWidthon setOriginalRecordCount()	tell application id "DNtp"		set originalRecordCount to count of my getTodaysRecords()				return originalRecordCount	end tellend setOriginalRecordCounton getTodaysRecords()	tell application id "DNtp"		set todaysRecords to search "additionDate&gt;" &amp; addition date of my nullRecord() &amp; " AND kind:pdf"		return todaysRecords	end tellend getTodaysRecordson exportAsPdf()	tell application "System Events"		click menu item "Export as PDF…" of menu "File" of menu bar item "File" of menu bar 1 of application process "Safari"				tell process "Safari"			my waitFor(a reference to sheet 1 of window 1)						tell sheet 1 of window 1				if value of pop up button 1 is not "Inbox" then					set inboxRow to null										repeat with aRow in row of outline 1 of scroll area 1 of splitter group 1						if name of first UI element of aRow starts with "Inbox" then							set inboxRow to aRow							select inboxRow														exit repeat						end if					end repeat										if inboxRow = null then						keystroke "g" using {shift down, command down}						my waitFor(a reference to sheet 1)						keystroke "~/Library/Application Support/DEVONthink 3/Inbox"						keystroke return					end if				end if								click button "Save"			end tell		end tell	end tellend exportAsPdfon restoreWidth()	tell application "Safari"		set bounds of the first window to originalBounds	end tellend restoreWidthon nullRecord()	tell application id "DNtp"		script nullRecord			property addition date : (current date) - 60		end script				return nullRecord	end tellend nullRecordon updateUrl()	tell application id "DNtp"		repeat			set todaysRecords to my getTodaysRecords()			if (count of todaysRecords) &gt; originalRecordCount then exit repeat			delay 0.3		end repeat				set latestRecord to my nullRecord()				repeat with aRecord in todaysRecords			if (addition date of aRecord) &gt; (addition date of latestRecord) then				set latestRecord to aRecord			end if		end repeat				set URL of latestRecord to currentUrl	end tellend updateUrl</string>
+				</dict>
+				<key>BundleIdentifier</key>
+				<string>com.apple.Automator.RunScript</string>
+				<key>CFBundleVersion</key>
+				<string>1.0.2</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<false/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>RunScriptAction</string>
+				<key>InputUUID</key>
+				<string>2F8521FF-498F-4213-90C2-6FC2AD3178FA</string>
+				<key>Keywords</key>
+				<array>
+					<string>Run</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>C9722D69-5A5A-40BA-9438-CCF990A9506C</string>
+				<key>UUID</key>
+				<string>2C2EE619-2D12-449E-9B3B-C4ECA4368986</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<string>on run {input, parameters}
+	
+	(* Your script goes here *)
+	
+	return input
+end run</string>
+						<key>name</key>
+						<string>source</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+				</dict>
+				<key>isViewVisible</key>
+				<integer>1</integer>
+				<key>location</key>
+				<string>501.500000:1225.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Run AppleScript.action/Contents/Resources/Base.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>connectors</key>
+	<dict/>
+	<key>workflowMetaData</key>
+	<dict>
+		<key>applicationBundleID</key>
+		<string>com.apple.Safari</string>
+		<key>applicationBundleIDsByPath</key>
+		<dict>
+			<key>/Applications/Safari.app</key>
+			<string>com.apple.Safari</string>
+		</dict>
+		<key>applicationPath</key>
+		<string>/Applications/Safari.app</string>
+		<key>applicationPaths</key>
+		<array>
+			<string>/Applications/Safari.app</string>
+		</array>
+		<key>inputTypeIdentifier</key>
+		<string>com.apple.Automator.nothing</string>
+		<key>outputTypeIdentifier</key>
+		<string>com.apple.Automator.nothing</string>
+		<key>presentationMode</key>
+		<integer>11</integer>
+		<key>processesInput</key>
+		<integer>0</integer>
+		<key>serviceApplicationBundleID</key>
+		<string>com.apple.Safari</string>
+		<key>serviceApplicationPath</key>
+		<string>/Applications/Safari.app</string>
+		<key>serviceInputTypeIdentifier</key>
+		<string>com.apple.Automator.nothing</string>
+		<key>serviceOutputTypeIdentifier</key>
+		<string>com.apple.Automator.nothing</string>
+		<key>serviceProcessesInput</key>
+		<integer>0</integer>
+		<key>systemImageName</key>
+		<string>NSActionTemplate</string>
+		<key>useAutomaticInputType</key>
+		<integer>1</integer>
+		<key>workflowTypeIdentifier</key>
+		<string>com.apple.Automator.servicesMenu</string>
+	</dict>
+</dict>
+</plist>
